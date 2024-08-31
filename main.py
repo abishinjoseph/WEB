@@ -1,12 +1,5 @@
-from flask import Flask, render_template_string
 import folium
 import os
-
-# Create a Flask application
-app = Flask(__name__)
-
-# Create a base map centered at India
-m = folium.Map(location=[20.5937, 78.9629], zoom_start=5)  # Centered on India
 
 # Define the locations with images, details, latitude, and longitude
 locations = [
@@ -48,7 +41,10 @@ locations = [
 ]
 
 # URL of the custom paper pin icon
-paper_pin_icon_url = 'pin.png'
+paper_pin_icon_url = 'https://example.com/path/to/pin.png'  # Replace with actual URL if needed
+
+# Create a base map centered at India
+m = folium.Map(location=[20.5937, 78.9629], zoom_start=5)  # Centered on India
 
 # Add pins to the map with hoverable images and details
 for location in locations:
@@ -73,15 +69,9 @@ for location in locations:
         icon=folium.CustomIcon(icon_image=paper_pin_icon_url, icon_size=(30, 30))  # Customize size as needed
     ).add_to(m)
 
-# Save the map to an HTML file
-file_path = 'map.html'
+# Save the map to an HTML file in the 'public' directory
+file_path = 'public/map.html'
+os.makedirs(os.path.dirname(file_path), exist_ok=True)
 m.save(file_path)
 
-# Serve the HTML map via Flask
-@app.route('/')
-def index():
-    with open(file_path, 'r') as f:
-        return render_template_string(f.read())
-
-if __name__ == '__main__':
-    app.run(debug=True)
+print(f"Map saved to {file_path}")
